@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "83725032567",
+    "firebase_url": "https://officehandler-54ecb.firebaseio.com",
+    "project_id": "officehandler-54ecb",
+    "storage_bucket": "officehandler-54ecb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:83725032567:android:51f8459f8a2d2a82",
+        "android_client_info": {
+          "package_name": "com.shubham.tripin1.officehandleruser"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "83725032567-66pde1l5v10r18r493eugmrd0h8ubpla.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shubham.tripin1.officehandleruser",
+            "certificate_hash": "107d9f36a7563117685afe93cf15ce58240a0432"
+          }
+        },
+        {
+          "client_id": "83725032567-1hj8ciauilcvtjl9p7aa1clumeg8mhth.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTpRnUxyjkUnZZZicqzKE5WAOGACb9nBQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "83725032567-1hj8ciauilcvtjl9p7aa1clumeg8mhth.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
