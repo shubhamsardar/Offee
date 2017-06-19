@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.shubham.tripin1.officehandleruser.Activities.SplashActivity">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:background="@drawable/splash" />
+
+    <TextView
+        android:id="@+id/textViewOffee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="141dp"
+        android:text="Offee"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="50sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView_yo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textViewOffee"
+        android:text="Your Office Coffee!"
+        android:textAlignment="center" />
+
+    <LinearLayout
+        android:id="@+id/ll_pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:alpha="0.7"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:visibility="invisible"
+        android:weightSum="10">
+
+        <EditText
+            android:id="@+id/editText_hpass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="8"
+            android:background="@drawable/bg_round_corners2"
+            android:ems="10"
+            android:hint="Handler Password"
+            android:inputType="text"
+            android:padding="10dp"
+            android:textColor="@android:color/background_light"
+            android:textColorHint="?android:attr/textColorSecondaryNoDisable" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabpass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:layout_weight="2"
+
+            android:src="@drawable/ic_chevron_right_black_24dp"
+            app:fabSize="mini" />
+
+    </LinearLayout>
+
+</RelativeLayout>

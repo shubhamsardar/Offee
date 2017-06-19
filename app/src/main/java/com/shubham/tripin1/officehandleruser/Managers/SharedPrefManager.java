@@ -14,6 +14,8 @@ public class SharedPrefManager {
     public static final String PREF_USER_FIRSTNAME = "user_first_name";
     public static final String PREF_USER_LASTNAME = "user_last_name";
     public static final String PREF_USER_REG = "user_reg";
+    public static final String PREF_USER_PASS = "user_pass";
+
 
     private SharedPreferences mSharedPref;
     private Context mContext;
@@ -43,6 +45,15 @@ public class SharedPrefManager {
     }
     public String getUserReg() {
         String reginfo = mSharedPref.getString(PREF_USER_REG, "");
+        return reginfo;
+    }
+
+    public void setUserHpass(String reginfo) {
+        editor.putString(PREF_USER_PASS, reginfo);
+        editor.commit();
+    }
+    public String getUserHpass() {
+        String reginfo = mSharedPref.getString(PREF_USER_PASS, "");
         return reginfo;
     }
 

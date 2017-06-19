@@ -561,9 +561,6 @@ public class ImageUtils
                     {
                         e.printStackTrace();
                     }
-
-
-
                 }
                 break;
             case 1:

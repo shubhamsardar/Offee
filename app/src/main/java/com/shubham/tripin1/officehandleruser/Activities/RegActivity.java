@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -31,6 +32,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -112,23 +115,12 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
             finish();
         }
 
+        getSupportActionBar().setTitle("One Time Registration - Offee");
+        generateKey();
 
-        MessageDigest md = null;
-        try {
-            PackageInfo info = mContext.getPackageManager().getPackageInfo(
-                    mContext.getPackageName(),
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
-        Log.i("SecretKey = ", Base64.encodeToString(md.digest(), Base64.DEFAULT));
     }
+
+
 
     private void setListeners() {
         fab.setOnClickListener(new View.OnClickListener() {
@@ -150,7 +142,15 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
                         }
                     }
                 } else {
-                    verifyOTP(mEditTextOTP.getText().toString().trim());
+                    if(mBoolOTPVarified){
+                        Toast.makeText(mContext, "Fill up all fields bro!", Toast.LENGTH_LONG).show();
+                        if (!mBoolImgSet) {
+                            mTxtInfo.setText("Set Your Profile pic!");
+                        }
+                    }else {
+                        verifyOTP(mEditTextOTP.getText().toString().trim());
+
+                    }
                 }
             }
         });
@@ -166,7 +166,6 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
             @Override
             public void onClick(View v) {
                 sendOTP(mEditTextPhone.getText().toString().trim());
-
                 hideKeyboard();
             }
         });
@@ -226,7 +225,8 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
         if (requestCode == PIC_CROP) {
             Bundle extras = data.getExtras();
             mFilePath = data.getData();
-            Bitmap thePic = extras.getParcelable("data");
+            Bitmap thePic;
+            thePic = extras.getParcelable("data");
             mImgBtn.setImageBitmap(thePic);
             mBoolImgSet = true;
             mTxtUploadPic.setText("Looking good there! :D ");
@@ -247,7 +247,7 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
             progressDialog.setTitle("Uploading");
             progressDialog.show();
 
-            StorageReference riversRef = mStorageRef.child("userImages/" + mSharedPrefManager.getMobileNo() + ".jpg");
+            StorageReference riversRef = mStorageRef.child("userImages/" + mEditTextPhone.getText().toString().trim() + ".jpg");
             riversRef.putFile(mFilePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -299,12 +299,15 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
         Log.v("On Initiated", response);
         rlOTP.setVisibility(View.VISIBLE);
         mTxtInfo.setText("Wait for the OTP, Will Try To AutoFill here..");
+        mSendOTP.setText("RESEND");
+
     }
 
     @Override
     public void onInitiationFailed(Exception paramException) {
         Log.v("On Initiated failed", paramException.toString());
-        mTxtInfo.setText("Failed to Inttialize OTP, try again..");
+        mTxtInfo.setText("Failed to Intialize OTP, try again..");
+        mSendOTP.setText("VERIFY");
 
 
     }
@@ -314,9 +317,11 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
 
         if (mBoolImgSet) {
             mTxtInfo.setText("Verification Successful.. Good to go!");
+            uploadFile();
         } else {
             mTxtInfo.setText("Verification Successful..Set Image");
         }
+        mSendOTP.setText("DONE");
         mBoolOTPVarified = true;
         mEditTextOTP.setVisibility(View.INVISIBLE);
     }
@@ -395,5 +400,24 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
             toast.show();
         }
 
+    }
+
+    private void generateKey() {
+
+        MessageDigest md = null;
+        try {
+            PackageInfo info = mContext.getPackageManager().getPackageInfo(
+                    mContext.getPackageName(),
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
+        Log.i("SecretKey = ", Base64.encodeToString(md.digest(), Base64.DEFAULT));
     }
 }
