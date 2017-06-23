@@ -109,11 +109,12 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
         mSharedPrefManager = new SharedPrefManager(mContext);
         mImageUtils = new ImageUtils(this);
         mBoolImgSet = false;
-        mStorageRef = FirebaseStorage.getInstance().getReference();
+
         if (!mSharedPrefManager.getUserReg().isEmpty()) {
             startActivity(new Intent(mContext, MainActivity.class));
             finish();
         }
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
         getSupportActionBar().setTitle("One Time Registration - Offee");
         generateKey();

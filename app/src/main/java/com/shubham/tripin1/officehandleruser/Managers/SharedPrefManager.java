@@ -87,4 +87,7 @@ public class SharedPrefManager {
         editor.commit();
     }
 
+    public String getUserName() {
+        return getUserFirstName()+" "+getUserlastName();
+    }
 }
