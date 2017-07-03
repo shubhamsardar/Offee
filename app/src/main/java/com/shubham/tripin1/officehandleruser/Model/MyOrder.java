@@ -10,15 +10,17 @@ public class MyOrder {
     private List<CoffeeOrder> mOrderList;
     private String mUserName;
     private String mUserMobile;
+    private String mTimeAgo;
 
     public MyOrder(){
         //for firebase
     }
 
-    public MyOrder(String mUserName , String mUserMobile , List<CoffeeOrder> mOrderList){
+    public MyOrder(String mUserName , String mUserMobile , List<CoffeeOrder> mOrderList,String mTimeAgo){
         this.mOrderList = mOrderList;
         this.mUserName = mUserName;
         this.mUserMobile = mUserMobile;
+        this.mTimeAgo = mTimeAgo;
     }
 
     public List<CoffeeOrder> getmOrderList() {
@@ -43,5 +45,13 @@ public class MyOrder {
 
     public void setmUserMobile(String mUserMobile) {
         this.mUserMobile = mUserMobile;
+    }
+
+    public String getmTimeAgo() {
+        return mTimeAgo;
+    }
+
+    public void setmTimeAgo(String mTimeAgo) {
+        this.mTimeAgo = mTimeAgo;
     }
 }

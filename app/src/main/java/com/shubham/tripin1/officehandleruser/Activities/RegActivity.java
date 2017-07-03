@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -37,6 +39,7 @@ import java.io.FileOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import com.github.florent37.viewanimator.ViewAnimator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -58,6 +61,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePickerListener, VerificationListener {
 
     private EditText mEditTextFname;
@@ -81,17 +85,11 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
     private Boolean mBoolOTPVarified = false;
 
     private static final String[] REQUIRED_SDK_PERMISSIONS = new String[]{
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.GET_ACCOUNTS,
             Manifest.permission.RECEIVE_SMS,
             Manifest.permission.CAMERA,
             Manifest.permission.READ_SMS,
-            Manifest.permission.CALL_PHONE,
-            Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.READ_CONTACTS,
             Manifest.permission.ACCESS_NETWORK_STATE};
 
     static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
@@ -117,10 +115,9 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         getSupportActionBar().setTitle("One Time Registration - Offee");
-        generateKey();
+
 
     }
-
 
 
     private void setListeners() {
@@ -131,26 +128,25 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
                 if (mEditTextLname.getText().toString().isEmpty()
                         || mEditTextFname.getText().toString().isEmpty()
                         || mEditTextPhone.getText().toString().isEmpty()
-                        || mEditTextOTP.getText().toString().isEmpty()
                         || !mBoolImgSet) {
 
-                    if (mBoolOTPVarified) {
-                        uploadFile();
-                    } else {
-                        Toast.makeText(mContext, "Fill up all fields bro!", Toast.LENGTH_LONG).show();
-                        if (!mBoolImgSet) {
-                            mTxtInfo.setText("Set Your Profile pic!");
+                    Toast.makeText(mContext, "Fill up all fields human!", Toast.LENGTH_LONG).show();
+                    if (!mBoolImgSet) {
+                        if(mBoolOTPVarified){
+                            mTxtInfo.setText("You are verified, Set Your Profile pic !");
+
                         }
                     }
-                } else {
-                    if(mBoolOTPVarified){
-                        Toast.makeText(mContext, "Fill up all fields bro!", Toast.LENGTH_LONG).show();
-                        if (!mBoolImgSet) {
-                            mTxtInfo.setText("Set Your Profile pic!");
-                        }
-                    }else {
-                        verifyOTP(mEditTextOTP.getText().toString().trim());
 
+                } else {
+                    if (mBoolOTPVarified) {
+                        if (!mBoolImgSet) {
+                            mTxtInfo.setText("Set Your Profile pic human!");
+                        } else {
+                            uploadFile();
+                        }
+                    } else {
+                        verifyOTP(mEditTextOTP.getText().toString().trim());
                     }
                 }
             }
@@ -215,27 +211,41 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0) {
-            mImageUtils.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode != RESULT_CANCELED){
+            if (requestCode == 0) {
+                mImageUtils.onActivityResult(requestCode, resultCode, data);
+            }
+
+            if (requestCode == 1) {
+                mImageUtils.onActivityResult(requestCode, resultCode, data);
+            }
+
+            if (requestCode == PIC_CROP) {
+
+                if(data != null){
+                    Bundle extras = data.getExtras();
+                    Bitmap thePic;
+                    if(extras != null){
+                        thePic = extras.getParcelable("data");
+                        mImgBtn.setImageBitmap(thePic);
+                        mBoolImgSet = true;
+                        mTxtUploadPic.setText("Looking good there! :D ");
+                        if (mBoolOTPVarified) {
+                            ViewAnimator.animate(fab).tada().start();
+                        }
+                    }
+
+                }
+
+            }
         }
 
-        if(requestCode == 1){
-            mImageUtils.onActivityResult(requestCode, resultCode, data);
-        }
-
-        if (requestCode == PIC_CROP) {
-            Bundle extras = data.getExtras();
-            mFilePath = data.getData();
-            Bitmap thePic;
-            thePic = extras.getParcelable("data");
-            mImgBtn.setImageBitmap(thePic);
-            mBoolImgSet = true;
-            mTxtUploadPic.setText("Looking good there! :D ");
-        }
     }
 
     @Override
     public void onPicked(int from, String filename, Bitmap file, Uri uri) {
+        mFilePath = uri;
         performCrop(uri);
     }
 
@@ -290,7 +300,7 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
         }
         //if there is not any file
         else {
-            //you can display an error toast
+            Toast.makeText(mContext,"Some error in pic",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -318,7 +328,7 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
 
         if (mBoolImgSet) {
             mTxtInfo.setText("Verification Successful.. Good to go!");
-            uploadFile();
+           // uploadFile();
         } else {
             mTxtInfo.setText("Verification Successful..Set Image");
         }
@@ -403,22 +413,5 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
 
     }
 
-    private void generateKey() {
 
-        MessageDigest md = null;
-        try {
-            PackageInfo info = mContext.getPackageManager().getPackageInfo(
-                    mContext.getPackageName(),
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
-        Log.i("SecretKey = ", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-    }
 }

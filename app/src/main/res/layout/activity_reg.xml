@@ -67,7 +67,22 @@
         android:layout_below="@+id/linearLayout"
         android:background="@color/colorPrimary"
         android:elevation="5dp"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:id="@+id/relativeLayout">
+
+        <com.shubham.tripin1.officehandleruser.Utils.CircularImgView
+            android:id="@+id/imageButton"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
+            app:border="false"
+            app:border_color="@color/colorAccent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/profile" />
 
         <TextView
             android:id="@+id/textView5"
@@ -81,21 +96,8 @@
             android:text="Offee - the Office Coffee , is a Utility app to handle in-office transactions in a fun way!"
             android:textAlignment="center"
             android:textColor="@color/colorAccent"
+            android:textSize="12sp"
             android:textStyle="bold" />
-
-        <com.shubham.tripin1.officehandleruser.Utils.CircularImgView
-            android:id="@+id/imageButton"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:scaleType="centerCrop"
-            app:border="false"
-            app:border_color="@color/colorAccent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/profile" />
 
         <TextView
             android:id="@+id/textViewUploadpic"
@@ -124,33 +126,6 @@
         android:layout_margin="20dp"
         android:layout_marginTop="20dp"
         android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/editTextfname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_margin="10dp"
-            android:background="@drawable/bg_round_corners"
-            android:ems="10"
-            android:hint="Enter First Name"
-            android:inputType="textPersonName"
-
-            android:padding="10dp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/editTextlaname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/bg_round_corners"
-            android:elevation="1dp"
-            android:ems="10"
-            android:hint="Enter Last Name"
-            android:inputType="textPersonName"
-            android:padding="10dp"
-            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -187,6 +162,45 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <EditText
+            android:id="@+id/editTextfname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_round_corners"
+            android:ems="10"
+            android:hint="Enter First Name"
+            android:inputType="textPersonName"
+
+            android:padding="10dp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/editTextlaname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_round_corners"
+            android:elevation="1dp"
+            android:ems="10"
+            android:hint="Enter Last Name"
+            android:inputType="textPersonName"
+            android:padding="10dp"
+            android:textStyle="bold" />
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/relativeLayout"
+        android:layout_marginLeft="907dp"
+        android:layout_marginStart="907dp"
+        android:layout_marginTop="168dp"
+        android:text="5dp" />
 
 </RelativeLayout>

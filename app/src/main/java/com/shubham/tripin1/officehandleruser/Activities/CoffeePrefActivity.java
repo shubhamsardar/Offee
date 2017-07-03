@@ -1,5 +1,6 @@
 package com.shubham.tripin1.officehandleruser.Activities;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,9 +8,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 
+import com.github.florent37.viewanimator.AnimationListener;
+import com.github.florent37.viewanimator.ViewAnimator;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,8 +27,11 @@ import com.shubham.tripin1.officehandleruser.Model.CoffeeOrder;
 import com.shubham.tripin1.officehandleruser.Model.MyOrder;
 import com.shubham.tripin1.officehandleruser.R;
 import com.shubham.tripin1.officehandleruser.holders.PrefCoffeeHolder;
+import com.wang.avi.AVLoadingIndicatorView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -36,12 +44,14 @@ public class CoffeePrefActivity extends AppCompatActivity implements OnCoffeeSel
     private List<CoffeeOrder> mFullList,mSelectedList;
     private Button mPlaceOrder;
     private DatabaseReference ref2;
+    private AVLoadingIndicatorView loadingIndicatorView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coffee_pref);
+
 
         mFullList = new ArrayList<>();
         mSelectedList = new ArrayList<>();
@@ -59,10 +69,10 @@ public class CoffeePrefActivity extends AppCompatActivity implements OnCoffeeSel
         mRvOrders.setAdapter(mPrefAdapter);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
-                .child("pass").child("available_coffee");
+                .child(mSharedPref.getUserHpass()).child("available_coffee");
 
         ref2 = FirebaseDatabase.getInstance().getReference()
-                .child("pass").child("orders");
+                .child(mSharedPref.getUserHpass()).child("orders");
 
 
         ref.addChildEventListener(new ChildEventListener() {
@@ -73,6 +83,10 @@ public class CoffeePrefActivity extends AppCompatActivity implements OnCoffeeSel
                 Log.d("Firebase","on Chlild added");
                 mPrefAdapter.notifyDataSetChanged();
                 mPlaceOrder.setText("Select Something!");
+                ViewAnimator.animate(mPlaceOrder).pulse().start();
+                loadingIndicatorView.setVisibility(View.INVISIBLE);
+
+
             }
 
             @Override
@@ -100,11 +114,19 @@ public class CoffeePrefActivity extends AppCompatActivity implements OnCoffeeSel
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
     private void intView() {
 
         mPlaceOrder = (Button)findViewById(R.id.button_placeorder);
+        loadingIndicatorView = (AVLoadingIndicatorView)findViewById(R.id.prefLoder);
 
     }
+
 
     private void setListners() {
 
@@ -115,14 +137,22 @@ public class CoffeePrefActivity extends AppCompatActivity implements OnCoffeeSel
                 mPlaceOrder.setText("Sending Request!");
 
                 if(mSelectedList.size()!=0){
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String currentDateTime = dateFormat.format(new Date()); // Find todays date
                     MyOrder order = new MyOrder(mSharedPref.getUserName(),
-                            mSharedPref.getMobileNo(),mSelectedList);
+                            mSharedPref.getMobileNo(),mSelectedList,currentDateTime);
                     ref2.push().setValue(order);
-                    mPlaceOrder.setText("Done!");
-                    startActivity(new Intent(mContext,MainActivity.class));
-                    finish();
+                    mPlaceOrder.setText("Order Placed!");
+                    ViewAnimator.animate(mPlaceOrder).pulse().duration(1000).start().onStop(new AnimationListener.Stop() {
+                        @Override
+                        public void onStop() {
+                            finish();
+                        }
+                    });
+
+
                 }else {
-                    mPlaceOrder.setText("Really? Select!");
+                    mPlaceOrder.setText("Kuch to Select!");
                 }
 
             }
@@ -155,6 +185,7 @@ public class CoffeePrefActivity extends AppCompatActivity implements OnCoffeeSel
 
         if(mSelectedList.size()!=0){
             mPlaceOrder.setText("Place Order!");
+
         }else {
             mPlaceOrder.setText("Select Items!");
         }

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
+    android:padding="30dp"
+    tools:context="com.shubham.tripin1.officehandleruser.Activities.Settings">
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="If you want to change your user info just clear the app data or simply reinstall the app!"
+        android:textAlignment="center"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editText_ReHpass"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/editText_ReHpass"
+        android:layout_marginLeft="13dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="45dp"
+        android:text="Set Your new Handler password here"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/editText_ReHpass"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/bg_round_corners2"
+        android:ems="10"
+        android:hint="Type New Password"
+        android:inputType="textPersonName"
+        android:padding="10dp"
+        android:textColor="@color/colorAccent"
+        android:textColorHint="@android:color/darker_gray" />
+
+    <Button
+        android:id="@+id/buttonHpass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/editText_ReHpass"
+        android:layout_alignRight="@+id/editText_ReHpass"
+        android:layout_below="@+id/editText_ReHpass"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginTop="11dp"
+        android:elevation="1dp"
+        android:text="Set" />
+
+    <TextView
+        android:id="@+id/textViewScanqr2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/buttonHpass"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView"
+        android:layout_marginBottom="11dp"
+        android:text="Or Scan Qr Code"
+        android:textAllCaps="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold" />
+</RelativeLayout>

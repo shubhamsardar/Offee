@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:background="?attr/colorButtonNormal"
 
+    android:background="?attr/colorButtonNormal"
     android:padding="5dp">
 
     <ImageView
@@ -52,12 +52,13 @@
                 android:id="@+id/fab_minus"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_margin="5dp"
-                android:clickable="true"
                 android:layout_gravity="center_vertical"
+                android:layout_margin="5dp"
+                android:alpha="0.97"
 
+                android:clickable="true"
                 app:backgroundTint="@color/colorPrimary"
-                app:elevation="1dp" />
+                app:elevation="2dp" />
 
             <TextView
                 android:id="@+id/textView_number"
@@ -78,9 +79,10 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="5dp"
+                android:alpha="0.97"
                 android:clickable="true"
                 app:backgroundTint="@color/colorPrimary"
-                app:elevation="1dp" />
+                app:elevation="2dp" />
         </LinearLayout>
     </LinearLayout>
 

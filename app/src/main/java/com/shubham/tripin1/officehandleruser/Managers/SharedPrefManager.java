@@ -12,6 +12,8 @@ public class SharedPrefManager {
 
     public static final String PREF_MOBILE_NUMBER = "user_mobile_no";
     public static final String PREF_USER_FIRSTNAME = "user_first_name";
+    public static final String PREF_USER_COMPNAME = "user_comp_name";
+
     public static final String PREF_USER_LASTNAME = "user_last_name";
     public static final String PREF_USER_REG = "user_reg";
     public static final String PREF_USER_PASS = "user_pass";
@@ -89,5 +91,10 @@ public class SharedPrefManager {
 
     public String getUserName() {
         return getUserFirstName()+" "+getUserlastName();
+    }
+
+    public void setUserCompany(String userCompany) {
+        editor.putString(PREF_USER_COMPNAME, userCompany);
+        editor.commit();
     }
 }

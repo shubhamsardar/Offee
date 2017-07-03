@@ -15,9 +15,9 @@
         android:layout_below="@+id/textView_welcome"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:animateLayoutChanges="true"
+        android:layout_marginTop="5dp"
         android:alpha="0.9"
+        android:animateLayoutChanges="true"
         android:background="@drawable/bg_round_corners"
         android:elevation="5dp"
         android:orientation="vertical">
@@ -26,13 +26,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="15dp">
+            android:paddingBottom="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="15dp"
+            android:paddingTop="15dp">
 
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="75dp"
                 android:layout_height="76dp"
-                android:alpha="0.8"
+                android:alpha="0.96"
                 android:elevation="1dp"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/ic_whatshot_black_24dp2" />
@@ -80,7 +83,7 @@
             android:id="@+id/rv_ordersinfo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorPrimaryDark"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -95,6 +98,17 @@
                 android:text="Loading Your Orders..."
                 android:textColor="@color/colorAccent"
                 android:textStyle="bold" />
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/AVLoadingIndicatorView2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_toLeftOf="@+id/textViewOrderInfo"
+                android:elevation="1dp"
+                android:alpha="0.95"
+                android:visibility="invisible"
+                app:indicatorColor="@android:color/white"
+                app:indicatorName="BallClipRotatePulseIndicator" />
 
         </RelativeLayout>
 
@@ -130,9 +144,21 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="false"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
         android:alpha="0.4"
         android:elevation="1dp"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/co2" />
+        app:srcCompat="@drawable/splash" />
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/AVLoadingIndicatorView"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerInParent="true"
+        android:elevation="1dp"
+        app:indicatorColor="@color/colorPrimaryDark"
+        app:indicatorName="TriangleSkewSpinIndicator" />
 
 </RelativeLayout>
