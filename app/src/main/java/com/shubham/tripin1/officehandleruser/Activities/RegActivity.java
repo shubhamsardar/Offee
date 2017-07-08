@@ -24,6 +24,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,9 @@ import java.io.FileOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.github.florent37.viewanimator.AnimationListener;
 import com.github.florent37.viewanimator.ViewAnimator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -51,6 +55,7 @@ import com.msg91.sendotp.library.Verification;
 import com.msg91.sendotp.library.VerificationListener;
 import com.shubham.tripin1.officehandleruser.Managers.SharedPrefManager;
 import com.shubham.tripin1.officehandleruser.R;
+import com.shubham.tripin1.officehandleruser.Utils.CircleTransform;
 import com.shubham.tripin1.officehandleruser.Utils.CircularImgView;
 import com.shubham.tripin1.officehandleruser.Utils.ImageUtils;
 
@@ -69,14 +74,14 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
     private EditText mEditTextPhone;
     private EditText mEditTextOTP;
 
-    private CircularImgView mImgBtn;
+    private ImageView mImgBtn;
     private FloatingActionButton fab;
     private Boolean mBoolImgSet;
     private Context mContext;
     private SharedPrefManager mSharedPrefManager;
     private static final int PICK_IMAGE_REQUEST = 234;
     private Uri mFilePath;
-    ImageUtils mImageUtils;
+    private ImageUtils mImageUtils;
     private StorageReference mStorageRef;
     private Verification mVerification;
     private Button mSendOTP;
@@ -84,13 +89,7 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
     private TextView mTxtInfo, mTxtUploadPic;
     private Boolean mBoolOTPVarified = false;
 
-    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[]{
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.RECEIVE_SMS,
-            Manifest.permission.CAMERA,
-            Manifest.permission.READ_SMS,
-            Manifest.permission.ACCESS_NETWORK_STATE};
+
 
     static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
     static final int REQUEST_CODE_ASK_PERMISSIONS = 1002;
@@ -100,7 +99,6 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reg);
-        checkPermissions();
         initView();
         setListeners();
         mContext = getApplicationContext();
@@ -127,26 +125,23 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
                 hideKeyboard();
                 if (mEditTextLname.getText().toString().isEmpty()
                         || mEditTextFname.getText().toString().isEmpty()
-                        || mEditTextPhone.getText().toString().isEmpty()
-                        || !mBoolImgSet) {
+                        || mEditTextPhone.getText().toString().isEmpty()) {
 
                     Toast.makeText(mContext, "Fill up all fields human!", Toast.LENGTH_LONG).show();
-                    if (!mBoolImgSet) {
-                        if(mBoolOTPVarified){
-                            mTxtInfo.setText("You are verified, Set Your Profile pic !");
-
-                        }
-                    }
 
                 } else {
                     if (mBoolOTPVarified) {
-                        if (!mBoolImgSet) {
-                            mTxtInfo.setText("Set Your Profile pic human!");
-                        } else {
+                        if (mBoolImgSet) {
                             uploadFile();
+                        } else {
+                            registrationSuccess();
                         }
                     } else {
-                        verifyOTP(mEditTextOTP.getText().toString().trim());
+                        if(!mEditTextOTP.getText().toString().isEmpty()){
+                            verifyOTP(mEditTextOTP.getText().toString().trim());
+                        }else {
+                            Toast.makeText(mContext,"Bad OTP",Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
             }
@@ -198,7 +193,7 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
         mEditTextLname = (EditText) findViewById(R.id.editTextlaname);
         mEditTextPhone = (EditText) findViewById(R.id.editTextmobile);
         mEditTextOTP = (EditText) findViewById(R.id.et_otp);
-        mImgBtn = (CircularImgView) findViewById(R.id.imageButton);
+        mImgBtn = (ImageView) findViewById(R.id.imageButton);
         fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
         mSendOTP = (Button) findViewById(R.id.button2);
         rlOTP = (RelativeLayout) findViewById(R.id.relativeLayoutOTP);
@@ -221,24 +216,6 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
                 mImageUtils.onActivityResult(requestCode, resultCode, data);
             }
 
-            if (requestCode == PIC_CROP) {
-
-                if(data != null){
-                    Bundle extras = data.getExtras();
-                    Bitmap thePic;
-                    if(extras != null){
-                        thePic = extras.getParcelable("data");
-                        mImgBtn.setImageBitmap(thePic);
-                        mBoolImgSet = true;
-                        mTxtUploadPic.setText("Looking good there! :D ");
-                        if (mBoolOTPVarified) {
-                            ViewAnimator.animate(fab).tada().start();
-                        }
-                    }
-
-                }
-
-            }
         }
 
     }
@@ -246,7 +223,21 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
     @Override
     public void onPicked(int from, String filename, Bitmap file, Uri uri) {
         mFilePath = uri;
-        performCrop(uri);
+        Glide.with(getApplicationContext())
+                .load(uri)
+                .centerCrop().crossFade().bitmapTransform(new CircleTransform(mContext))
+                .placeholder(R.drawable.profile)
+                .into(mImgBtn);
+        ViewAnimator.animate(mImgBtn).rubber().start().onStop(new AnimationListener.Stop() {
+            @Override
+            public void onStop() {
+                if(mBoolOTPVarified)
+                ViewAnimator.animate(fab).flash().start();
+                mTxtInfo.setText("press next button!");
+            }
+        });
+        mBoolImgSet = true;
+        mTxtUploadPic.setText("Looking good there! :D ");
     }
 
     //this method will upload the file
@@ -255,8 +246,9 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
         if (mFilePath != null) {
             //displaying a progress dialog while upload is going on
             final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading");
+            progressDialog.setTitle("Uploading Image");
             progressDialog.show();
+            progressDialog.setCancelable(false);
 
             StorageReference riversRef = mStorageRef.child("userImages/" + mEditTextPhone.getText().toString().trim() + ".jpg");
             riversRef.putFile(mFilePath)
@@ -267,13 +259,8 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
                             //hiding the progress dialog
                             progressDialog.dismiss();
                             //and displaying a success toast
-                            Toast.makeText(getApplicationContext(), "Registration Success", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(mContext, MainActivity.class));
-                            mSharedPrefManager.setMobileNo(mEditTextPhone.getText().toString());
-                            mSharedPrefManager.setUserName(mEditTextFname.getText().toString());
-                            mSharedPrefManager.setUserLastName(mEditTextLname.getText().toString());
-                            mSharedPrefManager.setUserReg("1");
-                            finish();
+                            registrationSuccess();
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -294,7 +281,7 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
                             @SuppressWarnings("VisibleForTests")
                             double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
                             //displaying percentage in progress dialog
-                            progressDialog.setMessage("Uploaded " + (int) progress + "%...");
+                            progressDialog.setMessage("Uploaded " + progress + "%...");
                         }
                     });
         }
@@ -302,6 +289,16 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
         else {
             Toast.makeText(mContext,"Some error in pic",Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void registrationSuccess() {
+        Toast.makeText(getApplicationContext(), "Registration Success", Toast.LENGTH_LONG).show();
+        startActivity(new Intent(mContext, MainActivity.class));
+        mSharedPrefManager.setMobileNo(mEditTextPhone.getText().toString());
+        mSharedPrefManager.setUserName(mEditTextFname.getText().toString());
+        mSharedPrefManager.setUserLastName(mEditTextLname.getText().toString());
+        mSharedPrefManager.setUserReg("1");
+        finish();
     }
 
     @Override
@@ -326,91 +323,29 @@ public class RegActivity extends AppCompatActivity implements ImageUtils.ImagePi
     @Override
     public void onVerified(String response) {
 
-        if (mBoolImgSet) {
-            mTxtInfo.setText("Verification Successful.. Good to go!");
-           // uploadFile();
-        } else {
-            mTxtInfo.setText("Verification Successful..Set Image");
+        if(mBoolOTPVarified){
+            registrationSuccess();
+        }else {
+            if (mBoolImgSet) {
+                mTxtInfo.setText("Verification Successful. Good to go!");
+                uploadFile();
+            } else {
+                mTxtInfo.setText("Verification Successful. Set Image(optional)");
+            }
+            mSendOTP.setText("Change");
+            mBoolOTPVarified = true;
+            mEditTextOTP.setVisibility(View.INVISIBLE);
+            fab.setBackgroundColor(mContext.getResources().getColor(R.color.colorAccent));
+            ViewAnimator.animate(fab).rubber().start();
         }
-        mSendOTP.setText("DONE");
-        mBoolOTPVarified = true;
-        mEditTextOTP.setVisibility(View.INVISIBLE);
+
+
     }
 
     @Override
     public void onVerificationFailed(Exception paramException) {
         Log.v("On Verification Failed", paramException.toString());
-
-    }
-
-    protected void checkPermissions() {
-        Log.d("checkPermissions", "Inside");
-        final List<String> missingPermissions = new ArrayList<String>();
-        // check all required dynamic permissions
-        for (final String permission : REQUIRED_SDK_PERMISSIONS) {
-            final int result = ContextCompat.checkSelfPermission(this, permission);
-            if (result != PackageManager.PERMISSION_GRANTED) {
-                missingPermissions.add(permission);
-            }
-        }
-        if (!missingPermissions.isEmpty()) {
-            Log.d("checkPermissions", "missingPermissions is not empty");
-            // request all missing permissions
-            final String[] permissions = missingPermissions
-                    .toArray(new String[missingPermissions.size()]);
-            ActivityCompat.requestPermissions(this, permissions,
-                    REQUEST_CODE_ASK_PERMISSIONS);
-        } else {
-//            Logger.v(" premissions already granted ");
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
-        Log.d("onRequestPermissions", "Inside");
-        switch (requestCode) {
-            case REQUEST_CODE_ASK_PERMISSIONS:
-                for (int index = permissions.length - 1; index >= 0; --index) {
-                    if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
-                        // exit the app if one permission is not granted
-                        Toast.makeText(this, "Required permission '" + permissions[index]
-                                + "' not granted, exiting", Toast.LENGTH_LONG).show();
-                        finish();
-                        return;
-                    }
-                }
-//                Logger.v("all premissions granted from dialog");
-                break;
-        }
-    }
-
-    private void performCrop(Uri picUri) {
-
-        try {
-            //call the standard crop action intent (the user device may not support it)
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            //indicate image type and Uri
-            cropIntent.setDataAndType(picUri, "image/*");
-            //set crop properties
-            cropIntent.putExtra("crop", "true");
-            //indicate aspect of desired crop
-            cropIntent.putExtra("aspectX", 1);
-            cropIntent.putExtra("aspectY", 1);
-            //indicate output X and Y
-            cropIntent.putExtra("outputX", 256);
-            cropIntent.putExtra("outputY", 256);
-            //retrieve data on return
-            cropIntent.putExtra("return-data", true);
-            //start the activity - we handle returning in onActivityResult
-            startActivityForResult(cropIntent, PIC_CROP);
-        } catch (ActivityNotFoundException anfe) {
-            //display an error message
-            String errorMessage = "Whoops - your device doesn't support the crop action!";
-            Toast toast = Toast.makeText(mContext, errorMessage, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-
+        mTxtInfo.setText("Verification Failed..Try again");
     }
 
 

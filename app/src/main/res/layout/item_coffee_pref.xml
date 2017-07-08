@@ -8,6 +8,8 @@
     android:background="?attr/colorButtonNormal"
     android:padding="5dp">
 
+
+
     <ImageView
         android:id="@+id/imageView_thumb"
         android:layout_width="80dp"
@@ -39,6 +41,18 @@
             android:textColor="@color/colorPrimary"
             android:textSize="24sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewClickInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:elevation="1dp"
+            android:text="Tap on icon to select/unselect!"
+            android:textAllCaps="false"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/ll_numbers"
@@ -85,5 +99,19 @@
                 app:elevation="2dp" />
         </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:alpha="0.5"
+        android:elevation="1dp"
+        android:text="₹100"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

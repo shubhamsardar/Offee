@@ -8,6 +8,7 @@ public class CoffeeOrder {
     private String mCoffeeName;
     private String mCoffeeNumber;
     private String mOrderStatus;
+    private String mItemPrice;
 
     public CoffeeOrder(){
         //for firebase
@@ -37,5 +38,11 @@ public class CoffeeOrder {
         this.mOrderStatus = mOrderStatus;
     }
 
+    public String getmItemPrice() {
+        return mItemPrice;
+    }
 
+    public void setmItemPrice(String mItemPrice) {
+        this.mItemPrice = mItemPrice;
+    }
 }

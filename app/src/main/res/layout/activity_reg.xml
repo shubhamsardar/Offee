@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:animateLayoutChanges="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.shubham.tripin1.officehandleruser.Activities.RegActivity">
@@ -11,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/et_otp"
@@ -20,7 +21,7 @@
             android:layout_alignBottom="@+id/floatingActionButton"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginRight="90dp"
             android:background="@drawable/bg_round_corners2"
             android:elevation="1dp"
@@ -28,7 +29,8 @@
             android:hint="Type your OTP here."
             android:inputType="number"
             android:padding="15dp"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@android:color/darker_gray" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/floatingActionButton"
@@ -39,80 +41,46 @@
             android:layout_alignParentTop="true"
             android:layout_margin="16dp"
             android:clickable="true"
+            app:backgroundTint="@color/colorPrimary"
             app:fabSize="normal"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_chevron_right_black_24dp" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/text_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="76dp"
-        android:elevation="1dp"
-        android:paddingLeft="35dp"
-        android:text="Please Enter Your Details..."
-        android:textColor="@color/colorAccent"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/linearLayout"
         android:background="@color/colorPrimary"
         android:elevation="5dp"
-        android:padding="10dp"
-        android:id="@+id/relativeLayout">
+        android:padding="10dp">
 
-        <com.shubham.tripin1.officehandleruser.Utils.CircularImgView
+        <ImageView
             android:id="@+id/imageButton"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:scaleType="centerCrop"
-            app:border="false"
-            app:border_color="@color/colorAccent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/profile" />
+            app:srcCompat="@drawable/profile"
+            android:layout_above="@+id/textViewUploadpic"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/textViewUploadpic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:background="@color/colorPrimaryDark"
             android:padding="10dp"
-            android:text="Offee - the Office Coffee , is a Utility app to handle in-office transactions in a fun way!"
-            android:textAlignment="center"
-            android:textColor="@color/colorAccent"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textViewUploadpic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="20dp"
             android:text="Click to set your Profile pic here.. a nice selfie will work!"
             android:textAlignment="center"
-            android:textColor="@android:color/background_light"
-            android:layout_alignBottom="@+id/imageButton"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="13dp"
-            android:layout_toRightOf="@+id/imageButton"
-            android:layout_toEndOf="@+id/imageButton" />
+            android:textColor="?attr/colorButtonNormal"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
@@ -127,9 +95,53 @@
         android:layout_marginTop="20dp"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/text_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:elevation="1dp"
+            android:paddingLeft="20dp"
+            android:text="Please Enter Your Details..."
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/editTextfname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_round_corners"
+
+            android:ems="10"
+            android:hint="Enter First Name"
+            android:inputType="textPersonName"
+            android:padding="10dp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/editTextlaname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_round_corners"
+            android:elevation="1dp"
+            android:ems="10"
+            android:hint="Enter Last Name"
+            android:inputType="textPersonName"
+            android:padding="10dp"
+            android:textStyle="bold" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:weightSum="1">
 
@@ -161,33 +173,6 @@
                 android:textColor="@color/colorAccent"
                 android:textStyle="bold" />
         </LinearLayout>
-
-        <EditText
-            android:id="@+id/editTextfname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_margin="10dp"
-            android:background="@drawable/bg_round_corners"
-            android:ems="10"
-            android:hint="Enter First Name"
-            android:inputType="textPersonName"
-
-            android:padding="10dp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/editTextlaname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/bg_round_corners"
-            android:elevation="1dp"
-            android:ems="10"
-            android:hint="Enter Last Name"
-            android:inputType="textPersonName"
-            android:padding="10dp"
-            android:textStyle="bold" />
 
     </LinearLayout>
 

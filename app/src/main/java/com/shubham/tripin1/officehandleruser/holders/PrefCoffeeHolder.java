@@ -16,6 +16,10 @@ import com.shubham.tripin1.officehandleruser.R;
 public class PrefCoffeeHolder  extends RecyclerView.ViewHolder  {
     private TextView mNameField;
     private TextView mNumberField;
+    public TextView mTapInfo;
+    public TextView mPrice;
+
+
     public FloatingActionButton fabAdd,fabMinus;
     public LinearLayout llNumber;
     public ImageView imgThumb;
@@ -29,6 +33,8 @@ public class PrefCoffeeHolder  extends RecyclerView.ViewHolder  {
         fabMinus = (FloatingActionButton)itemView.findViewById(R.id.fab_minus);
         llNumber = (LinearLayout)itemView.findViewById(R.id.ll_numbers);
         imgThumb = (ImageView)itemView.findViewById(R.id.imageView_thumb);
+        mTapInfo = (TextView)itemView.findViewById(R.id.textViewClickInfo);
+        mPrice = (TextView)itemView.findViewById(R.id.textViewPrice);
     }
 
     public TextView getmNameField() {

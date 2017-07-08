@@ -1,5 +1,6 @@
 package com.shubham.tripin1.officehandleruser.Activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +9,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +34,10 @@ import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.shubham.tripin1.officehandleruser.Activities.RegActivity.REQUEST_CODE_ASK_PERMISSIONS;
 
 public class SplashActivity extends Activity {
 
@@ -39,6 +48,15 @@ public class SplashActivity extends Activity {
     SharedPrefManager mSharedPrefManager;
     Context mContext;
     private IntentIntegrator qrScan;
+
+    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[]{
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.RECEIVE_SMS,
+            Manifest.permission.INTERNET,
+            Manifest.permission.CAMERA,
+            Manifest.permission.READ_SMS,
+            Manifest.permission.ACCESS_NETWORK_STATE};
 
 
     @Override
@@ -51,6 +69,8 @@ public class SplashActivity extends Activity {
         setListners();
         mTxtYo.setVisibility(View.INVISIBLE);
         generateKey();
+        checkPermissions();
+
 
         //intializing scan object
         qrScan = new IntentIntegrator(this);
@@ -65,6 +85,7 @@ public class SplashActivity extends Activity {
                         if(mSharedPrefManager.getUserHpass().isEmpty()){
                             mLinPass.setVisibility(View.VISIBLE);
                             mTxtScanQr.setVisibility(View.VISIBLE);
+                            ViewAnimator.animate(mTxtScanQr).pulse().duration(1000).start();
 
                         }else {
                             final Handler handler = new Handler();
@@ -133,7 +154,7 @@ public class SplashActivity extends Activity {
         } catch (NoSuchAlgorithmException e) {
 
         }
-        Log.i("SecretKey ========= ", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+        Log.i("SecretKey g========= ", Base64.encodeToString(md.digest(), Base64.DEFAULT));
     }
 
     //Getting the scan results
@@ -170,5 +191,51 @@ public class SplashActivity extends Activity {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    protected void checkPermissions() {
+        Log.d("checkPermissions", "Inside");
+        final List<String> missingPermissions = new ArrayList<String>();
+        // check all required dynamic permissions
+        for (final String permission : REQUIRED_SDK_PERMISSIONS) {
+            final int result = ContextCompat.checkSelfPermission(this, permission);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                missingPermissions.add(permission);
+            }
+        }
+        if (!missingPermissions.isEmpty()) {
+            Log.d("checkPermissions", "missingPermissions is not empty");
+            // request all missing permissions
+            final String[] permissions = missingPermissions
+                    .toArray(new String[missingPermissions.size()]);
+            ActivityCompat.requestPermissions(this, permissions,
+                    REQUEST_CODE_ASK_PERMISSIONS);
+        } else {
+//            Logger.v(" premissions already granted ");
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        Log.d("onRequestPermissions", "Inside");
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS:
+                for (int index = permissions.length - 1; index >= 0; --index) {
+                    if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
+                        // exit the app if one permission is not granted
+                        Toast.makeText(this, "Required permission '" + permissions[index]
+                                + "' not granted, exiting", Toast.LENGTH_LONG).show();
+                        finish();
+                        return;
+                    }
+                }
+//                Logger.v("all premissions granted from dialog");
+                break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }

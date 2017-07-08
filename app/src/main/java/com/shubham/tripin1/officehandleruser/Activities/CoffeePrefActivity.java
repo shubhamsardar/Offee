@@ -20,11 +20,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.shubham.tripin1.officehandleruser.Adapters.CoffrrPrefRecyAdapter;
 import com.shubham.tripin1.officehandleruser.Communicators.OnCoffeeSelected;
 import com.shubham.tripin1.officehandleruser.Managers.SharedPrefManager;
 import com.shubham.tripin1.officehandleruser.Model.CoffeeOrder;
 import com.shubham.tripin1.officehandleruser.Model.MyOrder;
+import com.shubham.tripin1.officehandleruser.Model.OrderNotification;
 import com.shubham.tripin1.officehandleruser.R;
 import com.shubham.tripin1.officehandleruser.holders.PrefCoffeeHolder;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -43,7 +45,7 @@ public class CoffeePrefActivity extends AppCompatActivity implements OnCoffeeSel
     private Context mContext;
     private List<CoffeeOrder> mFullList,mSelectedList;
     private Button mPlaceOrder;
-    private DatabaseReference ref2;
+    private DatabaseReference ref2, refNofication;
     private AVLoadingIndicatorView loadingIndicatorView;
 
 
@@ -73,6 +75,24 @@ public class CoffeePrefActivity extends AppCompatActivity implements OnCoffeeSel
 
         ref2 = FirebaseDatabase.getInstance().getReference()
                 .child(mSharedPref.getUserHpass()).child("orders");
+        refNofication = FirebaseDatabase.getInstance().getReference()
+                .child("orders");
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getChildrenCount()!=0){
+                    mPlaceOrder.setText("Select Something!");
+                    ViewAnimator.animate(mPlaceOrder).pulse().start();
+                    loadingIndicatorView.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
         ref.addChildEventListener(new ChildEventListener() {
@@ -82,10 +102,6 @@ public class CoffeePrefActivity extends AppCompatActivity implements OnCoffeeSel
                 mFullList.add(c);
                 Log.d("Firebase","on Chlild added");
                 mPrefAdapter.notifyDataSetChanged();
-                mPlaceOrder.setText("Select Something!");
-                ViewAnimator.animate(mPlaceOrder).pulse().start();
-                loadingIndicatorView.setVisibility(View.INVISIBLE);
-
 
             }
 
@@ -96,6 +112,11 @@ public class CoffeePrefActivity extends AppCompatActivity implements OnCoffeeSel
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                CoffeeOrder c = dataSnapshot.getValue(CoffeeOrder.class);
+                mFullList.remove(c);
+                Log.d("Firebase","on Chlild removed");
+                mPrefAdapter.notifyDataSetChanged();
 
             }
 
@@ -141,6 +162,8 @@ public class CoffeePrefActivity extends AppCompatActivity implements OnCoffeeSel
                     String currentDateTime = dateFormat.format(new Date()); // Find todays date
                     MyOrder order = new MyOrder(mSharedPref.getUserName(),
                             mSharedPref.getMobileNo(),mSelectedList,currentDateTime);
+                    OrderNotification orderNotification = new OrderNotification(mSharedPref.getUserName(),mSharedPref.getUserHpass());
+                    refNofication.push().setValue(orderNotification);
                     ref2.push().setValue(order);
                     mPlaceOrder.setText("Order Placed!");
                     ViewAnimator.animate(mPlaceOrder).pulse().duration(1000).start().onStop(new AnimationListener.Stop() {

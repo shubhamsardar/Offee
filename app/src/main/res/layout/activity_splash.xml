@@ -21,7 +21,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="141dp"
+        android:layout_marginTop="160dp"
         android:text="Offee"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark"
@@ -36,7 +36,8 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textViewOffee"
         android:text="Your Office Coffee!"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/ll_pass"
@@ -45,7 +46,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:animateLayoutChanges="true"
         android:alpha="0.7"
+        android:background="@color/colorPrimary"
         android:orientation="horizontal"
         android:padding="10dp"
         android:visibility="invisible"
@@ -80,17 +83,20 @@
 
     <TextView
         android:id="@+id/textViewScanqr"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="29dp"
-        android:layout_marginRight="29dp"
-        android:text="or Scan QR Code"
-        android:textAllCaps="true"
-        android:textColor="@color/colorPrimaryDark"
-        android:textStyle="bold"
-        android:visibility="invisible"
-        android:layout_below="@+id/ll_pass"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_below="@+id/ll_pass"
+        android:alpha="0.95"
+        android:background="@color/colorPrimaryDark"
+        android:padding="5dp"
+        android:text="or Scan QR Code"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@android:color/holo_blue_bright"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
 
 </RelativeLayout>

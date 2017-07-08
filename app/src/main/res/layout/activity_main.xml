@@ -4,18 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@android:color/darker_gray"
     tools:context="com.shubham.tripin1.officehandleruser.Activities.MainActivity">
 
     <LinearLayout
+        android:id="@+id/ll_coffeecardd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView_welcome"
+        android:layout_below="@+id/linearLayout3"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
         android:alpha="0.9"
         android:animateLayoutChanges="true"
         android:background="@drawable/bg_round_corners"
@@ -104,8 +105,8 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_toLeftOf="@+id/textViewOrderInfo"
-                android:elevation="1dp"
                 android:alpha="0.95"
+                android:elevation="1dp"
                 android:visibility="invisible"
                 app:indicatorColor="@android:color/white"
                 app:indicatorName="BallClipRotatePulseIndicator" />
@@ -122,20 +123,44 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView_welcome"
+    <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:alpha="0.8"
-        android:background="@color/colorPrimaryDark"
-        android:elevation="3dp"
-        android:padding="10dp"
-        android:text="Welcome User!"
-        android:textAlignment="center"
-        android:textColor="?attr/colorAccent"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView_welcome"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0.95"
+            android:background="@color/colorPrimaryDark"
+            android:drawableRight="@android:drawable/arrow_down_float"
+            android:elevation="3dp"
+            android:padding="10dp"
+            android:text="Welcome User!"
+            android:textAlignment="center"
+            android:textColor="?attr/colorAccent"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewUserCost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0.9"
+            android:background="@color/colorPrimaryDark"
+            android:elevation="3dp"
+            android:padding="10dp"
+            android:text="User Cost!"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_blue_light"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imageView3"
@@ -156,6 +181,8 @@
         android:id="@+id/AVLoadingIndicatorView"
         android:layout_width="70dp"
         android:layout_height="70dp"
+        android:layout_alignParentBottom="false"
+        android:layout_below="@+id/ll_coffeecardd"
         android:layout_centerInParent="true"
         android:elevation="1dp"
         app:indicatorColor="@color/colorPrimaryDark"

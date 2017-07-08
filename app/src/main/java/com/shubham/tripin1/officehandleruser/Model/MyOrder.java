@@ -54,4 +54,14 @@ public class MyOrder {
     public void setmTimeAgo(String mTimeAgo) {
         this.mTimeAgo = mTimeAgo;
     }
+
+    public double getOrderCost(){
+        double totalcost = 0;
+        for(CoffeeOrder coffeeOrder : getmOrderList()){
+            double n = Double.parseDouble(coffeeOrder.getmCoffeeNumber());
+            double p = Double.parseDouble(coffeeOrder.getmItemPrice());
+            totalcost = totalcost + (p*n) ;
+        }
+        return totalcost;
+    }
 }

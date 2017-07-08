@@ -7,4 +7,10 @@
         android:icon="@drawable/ic_settings_black_24dp"
         android:orderInCategory="100"
         app:showAsAction="always"/>
+    <item
+        android:title="history"
+        android:id="@+id/action_history"
+        android:icon="@drawable/ic_history_black_24dp"
+        android:orderInCategory="80"
+        app:showAsAction="always"/>
 </menu>
